@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    //**bmob-sdk版本依赖包，用于兼容Android6.0系统**
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        applicationId "com.haikuowuya.run"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0.0"
+        ndk {
+            abiFilters "armeabi"
+        }
+    }
+    signingConfigs {
+        release {
+            keyAlias 'demo'
+            keyPassword 'android'
+            storeFile file('../run.jks')
+            storePassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务
+    //bmob-push：Bmob的推送包
+    //bmob-im：Bmob的即时通讯包，如果想使用即时通讯服务，则添加以下两个包，注意每个版本的im依赖特定版本的bmob-sdk，而bmob-sdk又需要特定的依赖库，具体可以查看下面注释[2]中的对应关系
+    //okhttp：自`V3.4.3版本`开始，使用`okhttp`优化SDK的网络框架，和bmob-sdk一起配套使用。
+    //bmob-sdk:3.4.6需要依赖okhttp（2.4.0）、okio（2.4.0），如果需要兼容Android6.0系统，则还需要添加support-v4（23.2.1）及org.apache.http.legacy包，具体可查看下面注释[1]的解释
+    implementation 'cn.bmob.android:bmob-sdk:3.4.6'
+    implementation 'com.squareup.okhttp:okhttp:2.4.0'
+    implementation 'com.squareup.okio:okio:1.4.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'cn.bmob.android:bmob-push:0.8'
+    implementation 'cn.bmob.android:bmob-im:2.0.4'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.orhanobut:logger:1.4'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation 'cn.bmob.android:androidasync:2.1.6'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    //动态申请权限 【https://github.com/tbruyelle/RxPermissions】
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.15'
+}

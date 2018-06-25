@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/theme_while">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_run_record"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/run_record_sync_identifer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sync"/>
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="未同步记录会带有此标记可下拉刷新同步本地数据"
+            android:singleLine="false"
+            android:lines="2"
+            android:layout_marginLeft="12dp"/>
+    </LinearLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/run_record_swiperefreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/run_record_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

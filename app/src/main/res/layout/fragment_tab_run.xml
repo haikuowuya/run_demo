@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_while"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    tools:context="com.haikuowuya.run.fragment.RunFragment">
+
+    <include layout="@layout/main_run_data_layout" />
+
+    <Button
+        android:id="@+id/main_run_start_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_run_selector"
+        android:text="@string/btn_run_start_run"
+        android:textColor="@color/theme_while"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>

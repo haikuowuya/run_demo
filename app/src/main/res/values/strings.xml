@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">跑步Demo</string>
+
+    <string name="btn_login">登录</string>
+
+    <string name="hint_username">请输入邮箱/手机号</string>
+    <string name="hint_password">请输入密码</string>
+    <string name="hint_mobile">请输入手机号</string>
+    <string name="hint_verify_code">请输入验证码</string>
+    <string name="hint_email">请输入邮箱号码</string>
+    <string name="hint_set_pwd">请输入6~20位密码</string>
+
+    <string name="hint_register_name">请输入用户名</string>
+    <string name="hint_nick">请输入昵称</string>
+    <string name="hint_birthday">设置生日</string>
+
+    <string name="text_rigister">新用户注册</string>
+    <string name="text_get_pwd_back">忘记密码？</string>
+    <string name="text_other_account">其它账号登录</string>
+
+    <string name="text_get_verify_code">发送验证码</string>
+    <string name="text_verify_code_count_down">秒重发</string>
+
+    <string name="action_next_step">下一步</string>
+    <string name="title_register">注册</string>
+    <string name="text_switch_to_mobile">切换至手机号注册</string>
+    <string name="text_switch_to_email">切换至邮箱注册</string>
+
+    <string name="text_upload_headImg">上传头像</string>
+    <string name="text_register_username">用户名</string>
+    <string name="text_nick">昵称</string>
+    <string name="text_birthday">生日</string>
+    <string name="text_sex">性别</string>
+    <string name="btn_finish">完成</string>
+    <string name="radio_male">男</string>
+    <string name="radio_female">女</string>
+
+    <string name="title_select_picture">选择图片</string>
+
+    <string name="title_reset_pwd">忘记密码</string>
+    <string name="hint_set_password">请输入密码</string>
+    <string name="hint_again_password">请确认密码</string>
+    <string name="btn_reset_pwd">确定</string>
+    <string name="hint_reset_pwd_email">请输入登录邮箱</string>
+    <string name="text_switch_to_mobile_reset">切换至手机修改</string>
+    <string name="text_switch_to_email_reset">切换至邮箱修改</string>
+
+    <string name="tab_title_run">跑步</string>
+    <string name="tab_title_me">我的</string>
+    <string name="tab_title_home">首页</string>
+
+    <string name="title_me_fragment">我</string>
+    <string name="text_me_username">用户名</string>
+    <string name="text_me_follow">关注</string>
+    <string name="text_me_fans">粉丝</string>
+    <string name="text_me_count">统计</string>
+    <string name="text_me_count_distance">累计距离</string>
+    <string name="text_me_count_time">累计时间</string>
+    <string name="text_me_run_score">跑步记录</string>
+    <string name="text_me_friends_list">好友排行榜</string>
+    <string name="text_me_scan">扫一扫</string>
+
+    <string name="title_run">跑步</string>
+
+    <string name="btn_run_start_run">开始跑步</string>
+    <string name="text_run_air_quality">空气质量</string>
+    <string name="text_run_PM_2_5">PM2.5</string>
+    <string name="text_run_data_distance">累计跑步距离</string>
+    <string name="text_run_data_distance_unit">Km</string>
+    <string name="text_run_data_time">累计跑步时间</string>
+    <string name="text_run_data_time_unit">H</string>
+    <string name="text_run_data_count">跑步次数</string>
+    <string name="text_run_data_count_unit">次</string>
+
+
+    <string name="title_home_framgent">首页</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="voice_up_tips">手指上滑,取消发送</string>
+    <string name="voice_cancel_tips">松开手指，取消发送</string>
+    <string name="voice_seconds_tips">还可以说%1$s秒</string>
+    <string name="voice_short_tips">录音时间太短</string>
+
+    <string name="longclick_speak">长按说话</string>
+
+    <string name="about_time">2016.6 RunBang</string>
+
+
+</resources>

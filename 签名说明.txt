@@ -1,0 +1,3 @@
+run.jks
+密码为：android
+别名为:demo
