@@ -34,13 +34,9 @@ public class RunFragment extends Fragment implements View.OnClickListener {
     private TextView ditanceText;
     private TextView timeText;
     private TextView scoreNumberText;
-
     private double totalDistance = 0.0; //总距离
-
     private int totalTime = 0; //总时间
-
     private int totalCount = 0; //次数
-
 
     /**
      * Use this factory method to create a new instance of

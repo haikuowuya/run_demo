@@ -20,7 +20,6 @@ public class BaseActivity extends AppCompatActivity{
         context=getApplicationContext();
         SDKInitializer.initialize(context);
         Bmob.initialize(context,ConfigUtil.BMOB_APP_ID);
-
     }
 
     /**

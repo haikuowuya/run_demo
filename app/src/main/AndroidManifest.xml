@@ -82,12 +82,6 @@
 
         <activity android:name="com.haikuowuya.run.activity.RunRecordActivity" />
         <activity android:name="com.haikuowuya.run.activity.RunRecordDetailsActivity" />
-        <activity android:name="com.haikuowuya.run.activity.AlbumActivity" />
-        <activity
-            android:name="com.haikuowuya.run.activity.DynamicDetailsActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name="com.haikuowuya.run.activity.FriendActivity" />
-
         <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
             <intent-filter>
                 <action android:name="cn.bmob.action.RECONNECT" />
@@ -106,11 +100,9 @@
         <service android:name="cn.bmob.newim.core.service.ReConnectService" />
         <service android:name="cn.bmob.newim.core.service.HeartBeatService" />
 
-        <activity android:name="com.haikuowuya.run.activity.ChatActivity" />
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name="com.haikuowuya.run.activity.PushSetActivity" />
 
         <service
             android:name="cn.bmob.push.lib.service.PushService"
@@ -143,7 +135,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.haikuowuya.run.activity.PersonProfileActivity" />
         <activity android:name="com.haikuowuya.run.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -11,7 +11,7 @@ import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,10 +39,12 @@ import com.haikuowuya.run.utils.FileUtil;
 import com.haikuowuya.run.utils.GeneralUtil;
 import com.haikuowuya.run.utils.IdentiferUtil;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,9 +62,13 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
     private LinearLayout pauseLinear;
     private TextView stateText;
 
-    private TextView dialogMessage;
     private TextView dialogContinue;
     private TextView dialogEnd;
+
+    /***
+     * 是否是模拟状态
+     */
+    private CheckBox mCheckBox;
 
     private Dialog dialog; // 弹窗提示
 
@@ -74,17 +80,22 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
     private boolean isStart = false; // 标示 是否开始运动，默认false，未开始
 
     private double distance = 0.0; // 跑步总距离
+    /****
+     * 记录的最小距离
+     */
+    private static final double MIN_DISTANCE = 3.0;
     private int time = 0; //跑步用时，单位秒
     private Timer timer = null;
     private TimerTask timerTask = null;
 
-
     private List<LatLng> pointList = new ArrayList<>(); //坐标点集合
-
     private List<Float> speedList = new ArrayList<>(); // 速度集合
 
     private BaiduMap baiduMap;  //地图对象
-
+    /****
+     * 默认地图定位成功后的缩放比例
+     */
+    private float mDefaultZoom = 17.f;
     /**
      * 图标
      */
@@ -124,13 +135,8 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
                     break;
                 case IdentiferUtil.SAVE_DATA_TO_BMOB_SUCCESS:
                     runRecord.setIsSync(true);
-
                     DBManager.getInstance(context).insertRunRecord(runRecord);
-
-                    Log.i("TAG", "objecid" + runRecord.getObjectId());
-
                     break;
-
                 case IdentiferUtil.SAVE_DATA_TO_BMOB_FAILURE:
                     runRecord.setIsSync(false);
                     DBManager.getInstance(context).insertRunRecord(runRecord);
@@ -140,43 +146,47 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
         }
     };
 
+    /****
+     * 当前定位的经纬度坐标
+     */
+    private LatLng mLocationLatLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_run);
         initToolBar();
         initView();
         baiduMap = mapView.getMap();
-
-        isStart = true;
-        startTimer();
-        startOrPauseImg.setImageResource(R.drawable.run_stop);
-        stateText.setText("暂停");
-
         setOnLocationChangeListener(new OnLocationChangeListener() {
             @Override
             public void onLocationChange(BDLocation bdLocation) {
                 double latitude = bdLocation.getLatitude(); //纬度
                 double longitude = bdLocation.getLongitude(); // 经度
                 double radius = bdLocation.getRadius(); //精度
-                float speed = 0f;
                 if (bdLocation.hasSpeed()) {
-                    speed = bdLocation.getSpeed();
+                    float speed = bdLocation.getSpeed();
                     speedList.add(speed);
                     Log.i("TAG", "速度" + speed);
                 }
                 LatLng latLng = new LatLng(latitude, longitude); //坐标点
+                if (null == mLocationLatLng) {
+                    mLocationLatLng = new LatLng(latitude, longitude);
+                    MapStatus mapStatus = new MapStatus.Builder().target(mLocationLatLng).zoom(mDefaultZoom).build();
+                    update = MapStatusUpdateFactory.newMapStatus(mapStatus);
+                    baiduMap.setMapStatus(update);
+                }
+                if(mCheckBox.isChecked()) {
+                    latLng = mockLatLng();
+                }
                 if (Math.abs(latitude - 0.0) < 0.000001 && Math.abs(longitude - 0.0) < 0.000001) {
                 } else {
                     if (pointList.size() < 1) { //初次定位
-
                         pointList.add(latLng);
-
                     } else {
                         LatLng lastPoint = pointList.get(pointList.size() - 1);//上一次定位坐标点
                         double rang = DistanceUtil.getDistance(lastPoint, latLng); // 两次定位的距离
-                        if (rang > 10) {
+                        if (rang > MIN_DISTANCE) {
                             distance = distance + rang;
                             pointList.add(latLng);
                         }
@@ -186,6 +196,31 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
                 drawTrace(latLng);
             }
         });
+        onStartBtnClick();
+    }
+
+    /****
+     * 模拟跑步绘制 路线图
+     * @return
+     */
+    private LatLng mockLatLng() {
+        if (null != mLocationLatLng) {
+            DecimalFormat decimalFormat = new DecimalFormat("#.000000");
+            double latitude = mLocationLatLng.latitude;
+            latitude += new Random().nextDouble() / 25000;
+            double longitude = mLocationLatLng.longitude;
+            longitude += new Random().nextDouble() / 15000;
+            System.out.println("mock Latitude = " + decimalFormat.format(latitude) + " Longitude = " + decimalFormat.format(longitude));
+            LatLng latLng = new LatLng(latitude, longitude); //坐标点
+            mLocationLatLng = latLng;
+            return latLng;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isAutoLocation() {
+        return false;
     }
 
     private void initToolBar() {
@@ -205,13 +240,13 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
      * 初始化组件
      */
     private void initView() {
+        mCheckBox = findViewById(R.id.checkbox);
         mapView = (MapView) findViewById(R.id.run_mapview);
         timeText = (TextView) findViewById(R.id.run_time_text);
         distanceText = (TextView) findViewById(R.id.run_distance_text);
         stateText = (TextView) findViewById(R.id.run_state_text);
         startRelative = (RelativeLayout) findViewById(R.id.run_init_run_relative);
         pauseLinear = (LinearLayout) findViewById(R.id.run_pause_run_linear);
-
         continueImg = (ImageView) findViewById(R.id.run_continue_img);
         startOrPauseImg = (ImageView) findViewById(R.id.run_start_or_pause_img);
         stopImg = (ImageView) findViewById(R.id.run_stop_img);
@@ -229,20 +264,17 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
      * @param latLng
      */
     private void drawTrace(LatLng latLng) {
-
-        Log.i("TAG", "绘制实时点");
-
+        float zoom = baiduMap.getMapStatus().zoom;
+        Log.i("TAG", "绘制实时点 zoom = " + zoom);
         baiduMap.clear(); //清除覆盖物
-
-        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(17).build();
-
+        MapStatus mapStatus = new MapStatus.Builder().target(latLng).zoom(zoom).build();
         update = MapStatusUpdateFactory.newMapStatus(mapStatus);
-
         //实时点
         realtimeBitmap = BitmapDescriptorFactory.fromResource(R.drawable.point);
-        realtimeOptions = new MarkerOptions().position(latLng).icon(realtimeBitmap)
-                .zIndex(9).draggable(true);
-
+        if (isStart) {
+            realtimeOptions = new MarkerOptions().position(latLng).icon(realtimeBitmap)
+                    .zIndex(9).draggable(true);
+        }
         // 开始点
         BitmapDescriptor startBitmap = BitmapDescriptorFactory.fromResource(R.drawable.startpoint);
 
@@ -253,7 +285,7 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
 
         // 路线
         if (pointList.size() >= 2) {
-            polyLine = new PolylineOptions().width(10).color(Color.GREEN).points(pointList);
+            polyLine = new PolylineOptions().width(6).color(Color.GREEN).points(pointList);
         }
         addMarker();
     }
@@ -262,6 +294,7 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
      * 添加地图覆盖物
      */
     private void addMarker() {
+
         Log.i("TAG", "添加覆盖物");
         if (null != update) {
             baiduMap.setMapStatus(update);
@@ -295,7 +328,6 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
         LatLngBounds bounds = new LatLngBounds.Builder().include(startLatLng).include(endLatLng).build();
         update = MapStatusUpdateFactory.newLatLngBounds(bounds);
         if (pointList.size() >= 2) {
-
             // 开始点
             BitmapDescriptor startBitmap = BitmapDescriptorFactory.fromResource(R.drawable.startpoint);
             startOptions = new MarkerOptions().position(startLatLng).
@@ -305,16 +337,13 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
             BitmapDescriptor endBitmap = BitmapDescriptorFactory.fromResource(R.drawable.endpoint);
             endOptions = new MarkerOptions().position(endLatLng)
                     .icon(endBitmap).zIndex(9).draggable(true);
-
-            polyLine = new PolylineOptions().width(10).color(Color.GREEN).points(pointList);
+            polyLine = new PolylineOptions().width(6).color(Color.GREEN).points(pointList);
         } else {
             //实时点
             realtimeBitmap = BitmapDescriptorFactory.fromResource(R.drawable.point);
             realtimeOptions = new MarkerOptions().position(startLatLng).icon(realtimeBitmap)
                     .zIndex(9).draggable(true);
-
         }
-
         addMarker();
     }
 
@@ -374,43 +403,32 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
             timerTask.cancel();
             timerTask = null;
         }
-
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.run_mapview:
-                break;
             case R.id.run_start_or_pause_img:
                 if (isStart) {//已开始，暂停按钮
                     stopTimer(); //停止计时
+                    isStart = false;
                     startRelative.setVisibility(View.GONE);
                     pauseLinear.setVisibility(View.VISIBLE);
-                    stopLoation();
+                    stopLocation();
                 } else {
-                    //未开始，开始按钮
-                    isStart = true;
-                    startTimer();
-                    startOrPauseImg.setImageResource(R.drawable.run_stop);
-                    stateText.setText("暂停");
+                    onStartBtnClick();
                 }
                 break;
             case R.id.run_continue_img:// 继续
-
-                startTimer(); // 开始计时
-
-                startRelative.setVisibility(View.VISIBLE);
-                pauseLinear.setVisibility(View.GONE);
+                onStartBtnClick();
                 break;
             case R.id.run_stop_img: //停止,完成
-                stopLoation();
+                stopLocation();
                 stopTimer(); // 停止计时
                 showDialog();
                 break;
-
             case R.id.dialog_continue_run:
+                onStartBtnClick();
                 dialog.dismiss();
                 break;
             case R.id.dialog_end_run:
@@ -418,10 +436,20 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
                 drawFinishMap();
                 //截屏
                 mapScreenShot();
-
+                dialog.dismiss();
                 break;
-
         }
+    }
+
+    private void onStartBtnClick() {
+        //未开始，开始按钮
+        isStart = true;
+        startTimer();
+        startRelative.setVisibility(View.VISIBLE);
+        pauseLinear.setVisibility(View.GONE);
+        startOrPauseImg.setImageResource(R.drawable.run_stop);
+        stateText.setText("暂停");
+        startLocation();
     }
 
 
@@ -430,11 +458,9 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
      */
 
     private void mapScreenShot() {
-
         baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             @Override
             public void onSnapshotReady(Bitmap bitmap) {
-
                 //将bitmap存储到文件中
                 Log.i("TAG", "截图成功");
                 picPath = FileUtil.saveBitmapToFile(bitmap, "mapshot");
@@ -482,8 +508,6 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
             runRecord.setIsSync(false);
             DBManager.getInstance(context).insertRunRecord(runRecord);
         }
-
-        RunActivity.this.finish();
     }
 
     /**
@@ -494,10 +518,10 @@ public class RunActivity extends BaseLocationActivity implements View.OnClickLis
         dialog = new AlertDialog.Builder(RunActivity.this).create();
         dialog.show();
         dialog.setContentView(view);
-        dialogMessage = (TextView) view.findViewById(R.id.dialog_message_text);
         dialogContinue = (TextView) view.findViewById(R.id.dialog_continue_run);
         dialogEnd = (TextView) view.findViewById(R.id.dialog_end_run);
         dialogContinue.setOnClickListener(this);
         dialogEnd.setOnClickListener(this);
     }
+
 }
