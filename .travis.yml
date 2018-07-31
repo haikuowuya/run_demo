@@ -16,4 +16,4 @@ before_install:
 
 script:
     - echo "Travis branch is $TRAVIS_BRANCH"
-    - ./gradlew clean test
+    - ./gradlew clean assembleRelease
