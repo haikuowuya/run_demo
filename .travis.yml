@@ -22,7 +22,7 @@ script:
   - echo "Travis branch is $TRAVIS_BRANCH"
   - "./gradlew clean assembleRelease"
 before_deloy:
-  - echo "before deloy"
+  - echo -e "before deloy"
   - cd app/build/outputs/apk/release/
 
 deploy:
@@ -36,5 +36,5 @@ deploy:
     tags: false
     all_branches: true
 after_deloy:
-  - echo "after deloy"
+  - echo -e "after deloy"
   - ls -a
