@@ -27,7 +27,7 @@ deploy:
   provider: releases
   api_key:
     secure: YG259KrugDPEHDSjwhwjxHo7obRAG5y5XxntGRbFWAnyMWWoJ03FGCXIxjZ4ZywDtnY++Ag1Gnh4FK1rJaCH+FKFO3XClJhkdGsHdQlcI2Rtu5exv2LsFghS6lwawGFsJZzmYTokxbUdSv/X1OyE5cit/TnBTI0+JdKVpMaL3mtDjQwXGcc/P2DYjbslr7OrirbCvjMlWCb2KlHO7vzni4/8vtMnduLO8pE3WxJEf6lSobujTJ/0IdVJOwYrUniQTQDgvTAVfX0ZFZviFAuvds8Jc+VwtL26vTWrelfHWQ6vTQoqHpVWNlQwr+Ok6nRmXyezEbPgcEemZfqo9xyJGC1sp056sf983621iYacS0VV8VcISBAVahvTRCNsRtJ0CyAb5AGdzxz2hWtC/Mt7gpSE7d0luc4OKy2Lb18uHcwGd+5FfPDpGcxw+Rq+7aRMoijixFZfp/7CKoBkdD4zmrRTOq6Z0QA1kdSftsk4R/WtySAgyhkJ7pTkuRitoH3U8ZPk4xqkaUhAsA5LtEVME1Qsiy4D24eW8hzZwsaWggwFWgNX+iXpNaR7Ctrx2I3NYoS35nlW5PaHIwVjMH1pm0aTBepBFPIx5ckIQzUnpubyF2sRg4lfwol7hb0EZrVf4EZVEUVxd+uwg8Xj3xPJdWmcNInX2o1B3OSP471a8wk=
-  file: app/build/release.apk
+  file: app/build/outputs/apk/app-release.apk
   skip_cleanup: true
   on:
     #repo: haikuowuya/travisCIDemo
