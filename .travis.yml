@@ -1,27 +1,35 @@
 language: android
-
+sudo: false
 before_cache:
- - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
- - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
- directories:
- - $HOME/.gradle/caches/
- - $HOME/.gradle/wrapper/
-
-
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 android:
   components:
-    - build-tools-27.0.3
-    - android-27
-    - extra-android-m2repository
-    - extra-android-support
-
+  - build-tools-27.0.3
+  - android-27
+  - extra-android-m2repository
+  - extra-android-support
 before_install:
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+- chmod +x gradlew
 script:
-    - echo "Travis branch is $TRAVIS_BRANCH"
-    - ./gradlew clean assembleRelease
+- echo "Travis branch is $TRAVIS_BRANCH"
+- "./gradlew clean assembleRelease"
+before_deloy:
+- ls app/build/outputs/apk/
+deploy:
+  provider: releases
+  api_key:
+    secure: YG259KrugDPEHDSjwhwjxHo7obRAG5y5XxntGRbFWAnyMWWoJ03FGCXIxjZ4ZywDtnY++Ag1Gnh4FK1rJaCH+FKFO3XClJhkdGsHdQlcI2Rtu5exv2LsFghS6lwawGFsJZzmYTokxbUdSv/X1OyE5cit/TnBTI0+JdKVpMaL3mtDjQwXGcc/P2DYjbslr7OrirbCvjMlWCb2KlHO7vzni4/8vtMnduLO8pE3WxJEf6lSobujTJ/0IdVJOwYrUniQTQDgvTAVfX0ZFZviFAuvds8Jc+VwtL26vTWrelfHWQ6vTQoqHpVWNlQwr+Ok6nRmXyezEbPgcEemZfqo9xyJGC1sp056sf983621iYacS0VV8VcISBAVahvTRCNsRtJ0CyAb5AGdzxz2hWtC/Mt7gpSE7d0luc4OKy2Lb18uHcwGd+5FfPDpGcxw+Rq+7aRMoijixFZfp/7CKoBkdD4zmrRTOq6Z0QA1kdSftsk4R/WtySAgyhkJ7pTkuRitoH3U8ZPk4xqkaUhAsA5LtEVME1Qsiy4D24eW8hzZwsaWggwFWgNX+iXpNaR7Ctrx2I3NYoS35nlW5PaHIwVjMH1pm0aTBepBFPIx5ckIQzUnpubyF2sRg4lfwol7hb0EZrVf4EZVEUVxd+uwg8Xj3xPJdWmcNInX2o1B3OSP471a8wk=
+  file: app/build/release.apk
+  skip_cleanup: true
+  on:
+    #repo: haikuowuya/travisCIDemo
+    tags: false
+    all_branches: true
