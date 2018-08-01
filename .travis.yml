@@ -23,10 +23,10 @@ script:
   - "./gradlew clean assembleRelease"
 before_deloy:
   - echo "安装包："
-  - ls app/build/outputs/apk/
+  - ls ./app/build/outputs/apk/
 
 after_script:
-  - ls  app/
+  - ls  ./app/
 
 deploy:
   provider: releases
