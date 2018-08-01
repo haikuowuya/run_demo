@@ -22,7 +22,12 @@ script:
 - echo "Travis branch is $TRAVIS_BRANCH"
 - "./gradlew clean assembleRelease"
 before_deloy:
+- echo "安装包："
 - ls app/build/outputs/apk/
+
+after_script:
+- ls  app/
+
 deploy:
   provider: releases
   api_key:
